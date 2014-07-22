@@ -1,4 +1,4 @@
-agda-mode-sublime-text-3
+Agda for Sublime Text 3
 ========================
 
-because fuck emacs that's why
+Because fuck emacs that's why
