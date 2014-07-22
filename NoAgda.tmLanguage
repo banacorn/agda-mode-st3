@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array>
+		<string>agda</string>
+	</array>
+	<key>keyEquivalent</key>
+	<string>^~A</string>
+	<key>name</key>
+	<string>Agda</string>
+	<key>scopeName</key>
+	<string>source.agda</string>
+	<key>uuid</key>
+	<string>F9829CA7-1CEB-4A7E-AD45-0C1622729B8B</string>
+</dict>
+</plist>

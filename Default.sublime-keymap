@@ -1,0 +1,4 @@
+[{
+    "keys": ["ctrl+c", "ctrl+l"],
+    "command": "load_source"
+}, ]
