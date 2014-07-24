@@ -31,6 +31,10 @@
     "children": [{
         "caption": "Load",
         "mnemonic": ["ctrl+c", "ctrl+l"],
-        "command": "load_source"
+        "command": "load"
+    }, {
+        "caption": "Quit",
+        "mnemonic": ["ctrl+c", "ctrl+x", "ctrl+q"],
+        "command": "quit"
     }]
 }]

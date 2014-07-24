@@ -1,4 +1,7 @@
 [{
     "keys": ["ctrl+c", "ctrl+l"],
-    "command": "load_source"
-}, ]
+    "command": "load"
+}, {
+    "keys": ["ctrl+c", "ctrl+x", "ctrl+q"],
+    "command": "quit"
+}]
