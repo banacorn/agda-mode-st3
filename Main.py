@@ -79,12 +79,12 @@ def path(suffix):
 def activate_menu():
     old = path('Menus/NoMain.sublime-menu')
     new = path('Menus/Main.sublime-menu')
-    os.rename(oldPath, newPath)
+    os.rename(old, new)
 
 def deactivate_menu():
     old = path('Menus/Main.sublime-menu')
     new = path('Menus/NoMain.sublime-menu')
-    os.rename(oldPath, newPath)
+    os.rename(old, new)
 
 def activate_syntax(view):
     view.set_syntax_file('Packages/Agda/Syntax/Agda.tmLanguage')
