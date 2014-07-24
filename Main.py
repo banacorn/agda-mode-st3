@@ -1,5 +1,6 @@
 import sublime, sublime_plugin
 import os
+import Agda.agda.interactive as interactive
 
 class EventCommand(sublime_plugin.EventListener):
 
