@@ -48,19 +48,24 @@ class KillAndRestartCommand(sublime_plugin.TextCommand):
             sublime.run_command('quit');
             sublime.run_command('load');
 
+def path(suffix):
+    return sublime.packages_path() + '/Agda/' + suffix
+
 def activateMenu():
-    oldPath = sublime.packages_path() + '/Agda/Menus/NoMain.sublime-menu'
-    newPath = sublime.packages_path() + '/Agda/Menus/Main.sublime-menu'
+    oldPath = path('Menus/NoMain.sublime-menu')
+    newPath = path('Menus/Main.sublime-menu')
     os.rename(oldPath, newPath)
 
 def deactivateMenu():
-    oldPath = sublime.packages_path() + '/Agda/Menus/Main.sublime-menu'
-    newPath = sublime.packages_path() + '/Agda/Menus/NoMain.sublime-menu'
+    oldPath = path('Menus/Main.sublime-menu')
+    newPath = path('Menus/NoMain.sublime-menu')
     os.rename(oldPath, newPath)
 
 def activateSyntax(view):
-    view.set_syntax_file('Packages/Agda/Agda.tmLanguage')
+    syntaxPath = 'Packages/Agda/Syntax/Agda.tmLanguage'
+    view.set_syntax_file(syntaxPath)
 
 def deactivateSyntax(view):
-    view.set_syntax_file('Packages/Agda/NoAgda.tmLanguage')
+    syntaxPath = 'Packages/Agda/Syntax/NoAgda.tmLanguage'
+    view.set_syntax_file(syntaxPath)
 
