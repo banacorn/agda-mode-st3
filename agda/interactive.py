@@ -2,7 +2,6 @@ from subprocess import PIPE, Popen
 
 class Agda:
     def __init__(self, path):
-        print(path)
         self.fd = Popen([path, '--interactive'], stdin=PIPE, stdout=PIPE)
 
     def load(self, file):

@@ -31,7 +31,12 @@ class LoadCommand(sublime_plugin.TextCommand):
             path = self.locate_agda()
             sublime.status_message('File loaded.')
             agda = ai.Agda(path)
-            print(agda)
+            print(filename)
+
+
+
+
+
     # find Agda with settings
     # ask if not found
     def locate_agda(self):
@@ -42,6 +47,8 @@ class LoadCommand(sublime_plugin.TextCommand):
         if not agda_path or not os.path.isfile(agda_path): # empty or not found
             sublime.status_message('Agda executable not found : ' + agda_path)
             self.ask_and_set_agda_path() # query the user
+        else:
+            sublime.save_settings("Agda.sublime-settings")
 
         return agda_path
 
