@@ -4,4 +4,7 @@
 }, {
     "keys": ["ctrl+c", "ctrl+x", "ctrl+q"],
     "command": "quit"
+}, {
+    "keys": ["ctrl+c", "ctrl+x", "ctrl+r"],
+    "command": "kill_and_restart"
 }]
