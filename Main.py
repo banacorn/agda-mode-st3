@@ -1,6 +1,6 @@
 import sublime, sublime_plugin
 import os
-import Agda.agda.interactive as interactive
+import Agda.agda.interactive as ai
 
 class EventCommand(sublime_plugin.EventListener):
 
@@ -30,7 +30,8 @@ class LoadCommand(sublime_plugin.TextCommand):
             activate_syntax(self.view)
             path = self.locate_agda()
             sublime.status_message('File loaded.')
-
+            agda = ai.Agda(path)
+            print(agda)
     # find Agda with settings
     # ask if not found
     def locate_agda(self):
