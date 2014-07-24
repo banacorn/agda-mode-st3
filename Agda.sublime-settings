@@ -1,0 +1,5 @@
+{
+    // complete path of Agda executable
+    // find it `which agda`
+    "agda_path": true
+}
