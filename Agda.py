@@ -8,8 +8,8 @@ class EventCommand(sublime_plugin.EventListener):
         if not filename:  # buffer has never been saved
             return
         if filename.endswith('.agda'):
-            activateMenu()
-            deactivateSyntax(view)
+            activate_menu()
+            deactivate_syntax(view)
 
 
     def on_close(self, view):
@@ -17,7 +17,7 @@ class EventCommand(sublime_plugin.EventListener):
         if not filename:  # buffer has never been saved
             return
         if filename.endswith('.agda'):
-            deactivateMenu()
+            deactivate_menu()
 
 class LoadCommand(sublime_plugin.TextCommand):
 
@@ -26,7 +26,7 @@ class LoadCommand(sublime_plugin.TextCommand):
         if not filename:  # buffer has never been saved
             return
         if filename.endswith('.agda'):
-            activateSyntax(self.view)
+            activate_syntax(self.view)
             path = self.locate_agda()
             sublime.status_message('File loaded.')
 
@@ -61,7 +61,7 @@ class QuitCommand(sublime_plugin.TextCommand):
         if not filename:  # buffer has never been saved
             return
         if filename.endswith('.agda'):
-            deactivateSyntax(self.view)
+            deactivate_syntax(self.view)
 
 class KillAndRestartCommand(sublime_plugin.TextCommand):
 
@@ -76,21 +76,19 @@ class KillAndRestartCommand(sublime_plugin.TextCommand):
 def path(suffix):
     return sublime.packages_path() + '/Agda/' + suffix
 
-def activateMenu():
-    oldPath = path('Menus/NoMain.sublime-menu')
-    newPath = path('Menus/Main.sublime-menu')
+def activate_menu():
+    old = path('Menus/NoMain.sublime-menu')
+    new = path('Menus/Main.sublime-menu')
     os.rename(oldPath, newPath)
 
-def deactivateMenu():
-    oldPath = path('Menus/Main.sublime-menu')
-    newPath = path('Menus/NoMain.sublime-menu')
+def deactivate_menu():
+    old = path('Menus/Main.sublime-menu')
+    new = path('Menus/NoMain.sublime-menu')
     os.rename(oldPath, newPath)
 
-def activateSyntax(view):
-    syntaxPath = 'Packages/Agda/Syntax/Agda.tmLanguage'
-    view.set_syntax_file(syntaxPath)
+def activate_syntax(view):
+    view.set_syntax_file('Packages/Agda/Syntax/Agda.tmLanguage')
 
-def deactivateSyntax(view):
-    syntaxPath = 'Packages/Agda/Syntax/NoAgda.tmLanguage'
-    view.set_syntax_file(syntaxPath)
+def deactivate_syntax(view):
+    view.set_syntax_file('Packages/Agda/Syntax/NoAgda.tmLanguage')
 
