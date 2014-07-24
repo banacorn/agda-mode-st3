@@ -31,7 +31,7 @@ class LoadCommand(sublime_plugin.TextCommand):
             path = self.locate_agda()
             sublime.status_message('File loaded.')
             agda = ai.Agda(path)
-            print(filename)
+            print(agda.load(filename))
 
 
 
