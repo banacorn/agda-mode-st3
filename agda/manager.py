@@ -34,7 +34,7 @@ class Maneger(object):
                 self.previously_shown_panel = panel
             else:                                   # deactivate syntax when agda not loaded
                 deactivate_syntax(view)
-                
+
                 # hide panel
                 if self.previously_shown_panel:
                     self.previously_shown_panel.hide()
@@ -77,6 +77,7 @@ class Maneger(object):
         else:
             print('quit agda', view.id())
             deactivate_syntax(view)
+            self.loaded_views[id]['panel'].hide()
             self.loaded_views.pop(id, None)
 
     def restart_agda(self, view):
