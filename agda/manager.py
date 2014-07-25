@@ -28,20 +28,19 @@ class Maneger(object):
         filename = view.file_name()
         if filename and filename.endswith('.agda'): # agda
             show_menu()
-            if id in self.loaded_views:  
+            if id in self.loaded_views:             # loaded
                 panel = self.loaded_views[id]['panel']
                 panel.show()
                 self.previously_shown_panel = panel
-            else:                                   # deactivate syntax when agda not loaded
+
+            else:                                   # unloaded
                 deactivate_syntax(view)
 
-                # hide panel
                 if self.previously_shown_panel:
                     self.previously_shown_panel.hide()
                     self.previously_shown_panel = None
         else:                                       # no agda
             hide_menu()
-
             # hide panel
             if self.previously_shown_panel:
                 self.previously_shown_panel.hide()
@@ -66,6 +65,8 @@ class Maneger(object):
                 'panel': panel,
             }
 
+            self.previously_shown_panel = panel
+
             # EAT IT, AGDA
             agda.load()
 
@@ -78,8 +79,9 @@ class Maneger(object):
             print('quit agda', view.id())
             deactivate_syntax(view)
             self.loaded_views[id]['panel'].kill()
-            self.loaded_views[id]['agda'].terminate()
             self.loaded_views.pop(id, None)
+            self.previously_shown_panel = None
+
 
     def restart_agda(self, view):
         print('restart agda', view.id())
