@@ -44,3 +44,7 @@ class Agda(object):
     def load(self):
         s = 'IOTCM "' + self.__filename + '" None Direct (Cmd_load "' + self.__filename + '" [])'
         self.write(s)
+
+    # properly terminate the child process (Agda)
+    def terminate(self):
+        self.__agda.terminate()
