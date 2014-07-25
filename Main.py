@@ -32,7 +32,7 @@ class LoadCommand(sublime_plugin.TextCommand):
             activate_syntax(self.view)
             path = self.locate_agda()
             sublime.status_message('File loaded.')
-            AGDA.initialize(path, edit)
+            AGDA.initialize(path)
             AGDA.load(filename)
 
     # find Agda with settings

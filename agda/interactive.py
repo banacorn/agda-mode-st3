@@ -1,15 +1,20 @@
 import sublime
 from subprocess import PIPE, Popen
-# import threading
+import threading
 
 class Agda:
+
+    initialized = False
+
     """Talks to Agda"""
     def __init__(self):
         super(Agda, self).__init__()
 
-    def initialize(self, path, edit):
+    # wire on Agda
+    def initialize(self, path):
         self.__fd = Popen([path, '--interaction'], stdin=PIPE, stdout=PIPE)
-        self.panel = Panel(edit)
+        self.initialized = True
+
     def __write(self, string):
         self.__fd.stdin.write(bytearray(string + '\n', 'utf-8'))
 
@@ -17,25 +22,34 @@ class Agda:
         return self.__fd.stdout.readline().decode('utf-8')
 
     def load(self, file):
-        s = 'IOTCM "' + file + '" None Direct (Cmd_load "' + file + '" [])'
-        self.__write(s)
-        self.panel.write(self.__read());
+        if self.initialized:
+
+            s = 'IOTCM "' + file + '" None Direct (Cmd_load "' + file + '" [])'
+            self.__write(s)
+
+            panel = Panel()
+            panel.write('some shit')
+            # panel.stream(self.__read);
 
 
 class Panel(object):
     """Outputs strings to the panel"""
-    def __init__(self, edit):
+    def __init__(self):
         super(Panel, self).__init__()
         self.window = sublime.active_window()
         self.panel = self.window.create_output_panel('panel')
-        self.edit = edit
 
     def write(self, string):
         print('* PANEL: ' + string)
-        self.panel.insert(self.edit, 0, string)
+        self.panel.run_command("append", {"characters": string})
+        self.panel.run_command("append", {"characters": string})
         self.window.run_command('show_panel', {'panel': 'output.panel'})
 
-
+    def stream(self, target):
+        def worker():
+            self.write(target())
+        t = threading.Thread(target=worker)
+        t.start()
 # class Writer(threading.Thread):
 #     def __init__(self, edit):
 #         threading.Thread.__init__(self)
