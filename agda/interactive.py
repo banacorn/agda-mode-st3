@@ -28,8 +28,7 @@ class Agda:
             self.__write(s)
 
             panel = Panel()
-            panel.write('some shit')
-            # panel.stream(self.__read);
+            panel.stream(self.__read);
 
 
 class Panel(object):
@@ -42,14 +41,16 @@ class Panel(object):
     def write(self, string):
         print('* PANEL: ' + string)
         self.panel.run_command("append", {"characters": string})
-        self.panel.run_command("append", {"characters": string})
         self.window.run_command('show_panel', {'panel': 'output.panel'})
 
     def stream(self, target):
         def worker():
-            self.write(target())
+            while True:
+                self.write(target())
         t = threading.Thread(target=worker)
         t.start()
+
+
 # class Writer(threading.Thread):
 #     def __init__(self, edit):
 #         threading.Thread.__init__(self)
