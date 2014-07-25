@@ -11,8 +11,6 @@ class EventCommand(sublime_plugin.EventListener):
         if not filename:  # buffer has never been saved
             return
         if filename.endswith('.agda'):
-            print("ON LOAD")
-            # activate_menu()
             deactivate_syntax(view)
 
 
@@ -22,13 +20,12 @@ class EventCommand(sublime_plugin.EventListener):
         if not filename:  # buffer has never been saved
             return
         if filename.endswith('.agda'):
-            # deactivate_menu()
             pass
 
+    # show 'Agda' in menubar when agda tab activated
     def on_activated_async(self, view):
-        print(view.file_name(), 'activated')
         filename = view.file_name()
-        if filename.endswith('.agda'):
+        if filename and filename.endswith('.agda'):
             activate_menu()
         else:
             deactivate_menu()
