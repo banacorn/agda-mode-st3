@@ -21,24 +21,38 @@ class Maneger(object):
         print('close', view.id())
 
     def activate_view(self, view):
-        print('activate', view.id())
-        self.focused_view = view.id()
+        id = view.id()
+        print('activate', id)
 
         filename = view.file_name()
         if filename and filename.endswith('.agda'): # agda
             show_menu()
-            deactivate_syntax(view)
+            if id not in self.loaded_views:     # deactivate syntax when agda not loaded
+                deactivate_syntax(view)
         else:                                       # no agda
             hide_menu()
 
 
     def load_agda(self, view):
-        print('load agda', view.id())
-        activate_syntax(view)
+        id = view.id()
+        if id in self.loaded_views:
+            print('agda already loaded', id)
+            return
+        else:
+            print('load agda', id)
+            activate_syntax(view)
+            self.loaded_views[id] = view
+            pprint(self.loaded_views)
 
     def quit_agda(self, view):
-        print('quit agda', view.id())
-        deactivate_syntax(view)
+        id = view.id()
+        if id not in self.loaded_views:
+            print('agda never loaded', id)
+            return
+        else:
+            print('quit agda', view.id())
+            deactivate_syntax(view)
+            self.loaded_views.pop(id, None)
 
     def restart_agda(self, view):
         print('restart agda', view.id())
