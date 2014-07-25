@@ -2,6 +2,8 @@ import sublime, sublime_plugin
 import os
 from pprint import pprint
 
+from Agda.agda.interactive import Agda
+from Agda.agda.panel import Panel
 
 class Maneger(object):
     """docstring for Maneger"""
@@ -35,14 +37,25 @@ class Maneger(object):
 
     def load_agda(self, view):
         id = view.id()
+        filename = view.file_name()
         if id in self.loaded_views:
             print('agda already loaded', id)
             return
         else:
             print('load agda', id)
+
+            # initializing this newly loaded view
+            agda = Agda(filename)
+            panel = Panel(id, agda)
             activate_syntax(view)
-            self.loaded_views[id] = view
-            pprint(self.loaded_views)
+            self.loaded_views[id] = {
+                'view': view,
+                'agda': agda, 
+                'panel': panel,
+            }
+
+            # EAT IT, AGDA
+            agda.load()
 
     def quit_agda(self, view):
         id = view.id()

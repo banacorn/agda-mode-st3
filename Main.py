@@ -1,9 +1,6 @@
 import sublime, sublime_plugin
 import os, sys
-import Agda.agda.interactive as interactive
 import Agda.agda.manager as manager
-
-AGDA = interactive.Agda()
 MANAGER = manager.Maneger()
 
 class EventCommand(sublime_plugin.EventListener):
@@ -19,7 +16,6 @@ class LoadCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         filename = self.view.file_name()
         if filename and filename.endswith('.agda'):
-            AGDA.locate()            
             MANAGER.load_agda(self.view)
 
 class QuitCommand(sublime_plugin.TextCommand):
