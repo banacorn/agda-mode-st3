@@ -1,48 +1,31 @@
 import sublime, sublime_plugin
 import os, sys
-import Agda.agda.interactive as ai
+import Agda.agda.interactive as interactive
+import Agda.agda.manager as manager
 
-AGDA = ai.Agda()
+AGDA = interactive.Agda()
+MANAGER = manager.Maneger()
 
 class EventCommand(sublime_plugin.EventListener):
 
-    def on_load(self, view):
-        filename = view.file_name()
-        if not filename:  # buffer has never been saved
-            return
-        if filename.endswith('.agda'):
-            deactivate_syntax(view)
-
-
-
     def on_close(self, view):
-        filename = view.file_name()
-        if not filename:  # buffer has never been saved
-            return
-        if filename.endswith('.agda'):
-            pass
+        MANAGER.close_view(view)
 
-    # show 'Agda' in menubar when agda tab activated
     def on_activated_async(self, view):
-        filename = view.file_name()
-        if filename and filename.endswith('.agda'):
-            activate_menu()
-        else:
-            deactivate_menu()
-
+        MANAGER.activate_view(view)
 
 class LoadCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
         filename = self.view.file_name()
-        if not filename:  # buffer has never been saved
-            return
-        if filename.endswith('.agda'):
-            activate_syntax(self.view)
-            path = self.locate_agda()
-            sublime.status_message('File loaded.')
-            AGDA.initialize(path)
-            AGDA.load(filename)
+        if filename and filename.endswith('.agda'):
+            MANAGER.load_agda(self.view)
+
+            # activate_syntax(self.view)
+            # path = self.locate_agda()
+            # sublime.status_message('File loaded.')
+            # AGDA.initialize(path)
+            # AGDA.load(filename)
 
     # find Agda with settings
     # ask if not found
@@ -74,38 +57,12 @@ class QuitCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
         filename = self.view.file_name()
-        if not filename:  # buffer has never been saved
-            return
-        if filename.endswith('.agda'):
-            deactivate_syntax(self.view)
+        if filename and filename.endswith('.agda'):
+            MANAGER.quit_agda(self.view)
 
 class KillAndRestartCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
         filename = self.view.file_name()
-        if not filename:  # buffer has never been saved
-            return
-        if filename.endswith('.agda'):
-            sublime.run_command('quit');
-            sublime.run_command('load');
-
-def path(suffix):
-    return sublime.packages_path() + '/Agda/' + suffix
-
-def activate_menu():
-    old = path('Menus/NoMain.sublime-menu')
-    new = path('Menus/Main.sublime-menu')
-    if os.path.isfile(old):
-        os.rename(old, new)
-
-def deactivate_menu():
-    old = path('Menus/Main.sublime-menu')
-    new = path('Menus/NoMain.sublime-menu')    
-    if os.path.isfile(old):
-        os.rename(old, new)
-
-def activate_syntax(view):
-    view.set_syntax_file('Packages/Agda/Syntax/Agda.tmLanguage')
-
-def deactivate_syntax(view):
-    view.set_syntax_file('Packages/Agda/Syntax/NoAgda.tmLanguage')
+        if filename and filename.endswith('.agda'):
+            MANAGER.restart_agda(self.view)

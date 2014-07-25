@@ -4,7 +4,7 @@ import threading
 
 class Agda:
 
-    initialized = False
+    __initialized = False
 
     """Talks to Agda"""
     def __init__(self):
@@ -13,7 +13,7 @@ class Agda:
     # wire on Agda
     def initialize(self, path):
         self.__fd = Popen([path, '--interaction'], stdin=PIPE, stdout=PIPE)
-        self.initialized = True
+        self.__initialized = True
 
     def __write(self, string):
         self.__fd.stdin.write(bytearray(string + '\n', 'utf-8'))
@@ -22,22 +22,19 @@ class Agda:
         return self.__fd.stdout.readline().decode('utf-8')
 
     def load(self, file):
-        if self.initialized:
+        if self.__initialized:
 
             s = 'IOTCM "' + file + '" None Direct (Cmd_load "' + file + '" [])'
             self.__write(s)
 
-            panel = Panel()
-            panel.stream(self.__read);
-
+            # panel = Panel()
+            # panel.stream(self.__read);
 
 class Panel(object):
     """Outputs strings to the panel"""
     def __init__(self):
-        print("PANEL ININTED")
-
-        super(Panel, self).__init__()
         self.window = sublime.active_window()
+        print(self.window.views())
         self.panel = self.window.create_output_panel('panel')
 
     def write(self, string):
@@ -45,13 +42,13 @@ class Panel(object):
         self.window.run_command('show_panel', {'panel': 'output.panel'})
 
 
-    killStream = False
+    __killStream = False
 
     # streaming data from target function to the panel
     def stream(self, target):
         def worker():
             #
-            while not self.killStream:
+            while not self.__killStream:
                 output = target()
                 self.write(output)
         t = threading.Thread(target=worker)
