@@ -1,0 +1,10 @@
+{
+	"automatic_order": true,
+	"iterations": 1,
+	"mods_load_order":
+	[
+		"main.py",
+		"agda/interactive.py",
+		"agda/__init__.py"
+	]
+}

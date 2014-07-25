@@ -1,6 +1,8 @@
 import sublime, sublime_plugin
-import os
+import os, sys
 import Agda.agda.interactive as ai
+
+
 
 class EventCommand(sublime_plugin.EventListener):
 
@@ -30,10 +32,19 @@ class LoadCommand(sublime_plugin.TextCommand):
             activate_syntax(self.view)
             path = self.locate_agda()
             sublime.status_message('File loaded.')
-            agda = ai.Agda(path)
-            print(agda.load(filename))
+            agda = ai.Agda(path, edit)
+            agda.load(filename)
+            # window = sublime.active_window()
+            # panel = window.create_output_panel('output')
+            # panel.insert(edit, 0, 'aaaaa\n')
+            # window.run_command("show_panel", {"panel": "output.output"})
 
-
+            # panel.insert(edit, 2, 'vvvvv\n')
+            # window.run_command("show_panel", {"panel": "output.output"})
+            # panel.insert(edit, 0, 'ccccc\n')
+            # window.run_command("show_panel", {"panel": "output.output"})
+            # panel.insert(edit, 0, 'dddd\n')
+            # window.run_command("show_panel", {"panel": "output.output"})
 
 
 
@@ -100,4 +111,6 @@ def activate_syntax(view):
 
 def deactivate_syntax(view):
     view.set_syntax_file('Packages/Agda/Syntax/NoAgda.tmLanguage')
+
+
 
