@@ -77,7 +77,7 @@ class Maneger(object):
         else:
             print('quit agda', view.id())
             deactivate_syntax(view)
-            self.loaded_views[id]['panel'].hide()
+            self.loaded_views[id]['panel'].kill()
             self.loaded_views.pop(id, None)
 
     def restart_agda(self, view):

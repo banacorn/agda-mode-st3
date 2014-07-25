@@ -1,6 +1,7 @@
 import sublime
 import threading
-class Panel(object):
+
+class Panel(object):    
     """Outputs strings to the panel"""
     def __init__(self, id, agda):
         self.id = id
@@ -9,6 +10,9 @@ class Panel(object):
 
         self.stream(agda.read)
 
+    streaming = False
+
+    # write to output panel
     def write(self, string):
         self.panel.run_command('append', {'characters': string})
         self.window.run_command('show_panel', {'panel': 'output.panel-' + str(self.id)})
@@ -16,16 +20,25 @@ class Panel(object):
     # streaming data from target function to the panel
     def stream(self, target):
         def worker():
-            while True:
+            while self.streaming:
                 output = target()
                 self.write(output)
+        self.streaming = True
         threading.Thread(target=worker).start()
 
+    # shows output panel
     def show(self):
         print('showing panel', self.id)
         self.window.run_command('show_panel', {'panel': 'output.panel-' + str(self.id)})
 
+    # hides output panel
     def hide(self):
         print('hiding panel', self.id)
         self.window.run_command('hide_panel', {'panel': 'output.panel-' + str(self.id)})
+
+    # hides output panel & kills the stream (if any)
+    def kill(self):
+        self.hide()
+        self.streaming = False
+        print('killing the stream (if any)', self.id)
 
