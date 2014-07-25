@@ -20,3 +20,12 @@ class Panel(object):
                 output = target()
                 self.write(output)
         threading.Thread(target=worker).start()
+
+    def show(self):
+        print('showing panel', self.id)
+        self.window.run_command('show_panel', {'panel': 'output.panel-' + str(self.id)})
+
+    def hide(self):
+        print('hiding panel', self.id)
+        self.window.run_command('hide_panel', {'panel': 'output.panel-' + str(self.id)})
+

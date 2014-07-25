@@ -10,7 +10,7 @@ class Maneger(object):
     def __init__(self):
         super(Maneger, self).__init__()
     
-    focused_view = None
+    previously_shown_panel = None
     loaded_views = {}
 
     def new_view(self, view):
@@ -25,15 +25,27 @@ class Maneger(object):
     def activate_view(self, view):
         id = view.id()
         print('activate', id)
-
         filename = view.file_name()
         if filename and filename.endswith('.agda'): # agda
             show_menu()
-            if id not in self.loaded_views:     # deactivate syntax when agda not loaded
+            if id in self.loaded_views:  
+                panel = self.loaded_views[id]['panel']
+                panel.show()
+                self.previously_shown_panel = panel
+            else:                                   # deactivate syntax when agda not loaded
                 deactivate_syntax(view)
+                
+                # hide panel
+                if self.previously_shown_panel:
+                    self.previously_shown_panel.hide()
+                    self.previously_shown_panel = None
         else:                                       # no agda
             hide_menu()
 
+            # hide panel
+            if self.previously_shown_panel:
+                self.previously_shown_panel.hide()
+                self.previously_shown_panel = None
 
     def load_agda(self, view):
         id = view.id()
