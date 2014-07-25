@@ -11,8 +11,10 @@ class EventCommand(sublime_plugin.EventListener):
         if not filename:  # buffer has never been saved
             return
         if filename.endswith('.agda'):
-            activate_menu()
+            print("ON LOAD")
+            # activate_menu()
             deactivate_syntax(view)
+
 
 
     def on_close(self, view):
@@ -20,7 +22,17 @@ class EventCommand(sublime_plugin.EventListener):
         if not filename:  # buffer has never been saved
             return
         if filename.endswith('.agda'):
+            # deactivate_menu()
+            pass
+
+    def on_activated_async(self, view):
+        print(view.file_name(), 'activated')
+        filename = view.file_name()
+        if filename.endswith('.agda'):
+            activate_menu()
+        else:
             deactivate_menu()
+
 
 class LoadCommand(sublime_plugin.TextCommand):
 
@@ -86,18 +98,17 @@ def path(suffix):
 def activate_menu():
     old = path('Menus/NoMain.sublime-menu')
     new = path('Menus/Main.sublime-menu')
-    os.rename(old, new)
+    if os.path.isfile(old):
+        os.rename(old, new)
 
 def deactivate_menu():
     old = path('Menus/Main.sublime-menu')
-    new = path('Menus/NoMain.sublime-menu')
-    os.rename(old, new)
+    new = path('Menus/NoMain.sublime-menu')    
+    if os.path.isfile(old):
+        os.rename(old, new)
 
 def activate_syntax(view):
     view.set_syntax_file('Packages/Agda/Syntax/Agda.tmLanguage')
 
 def deactivate_syntax(view):
     view.set_syntax_file('Packages/Agda/Syntax/NoAgda.tmLanguage')
-
-
-

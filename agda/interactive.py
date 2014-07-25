@@ -34,22 +34,28 @@ class Agda:
 class Panel(object):
     """Outputs strings to the panel"""
     def __init__(self):
+        print("PANEL ININTED")
+
         super(Panel, self).__init__()
         self.window = sublime.active_window()
         self.panel = self.window.create_output_panel('panel')
 
     def write(self, string):
-        print('* PANEL: ' + string)
         self.panel.run_command("append", {"characters": string})
         self.window.run_command('show_panel', {'panel': 'output.panel'})
 
+
+    killStream = False
+
+    # streaming data from target function to the panel
     def stream(self, target):
         def worker():
-            while True:
-                self.write(target())
+            #
+            while not self.killStream:
+                output = target()
+                self.write(output)
         t = threading.Thread(target=worker)
         t.start()
-
 
 # class Writer(threading.Thread):
 #     def __init__(self, edit):
