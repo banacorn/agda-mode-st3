@@ -1,50 +1,71 @@
 import sublime
-from subprocess import PIPE, Popen
+from subprocess import PIPE, Popen, os
 
 class Agda(object):
 
     # executable
-    __agda_path = None                   
+    agda_path = None
 
     """Talks to Agda"""
-    def __init__(self, filename):
+    def __init__(self, id, filename):
         # super(Agda, self).__init__()
-        self.__filename = filename
+        self.id = id
+        self.filename = filename
         self.locate()
-        self.__agda = Popen([self.__agda_path, '--interaction'], stdin=PIPE, stdout=PIPE)
+        self.agda = Popen([self.agda_path, '--interaction'], stdin=PIPE, stdout=PIPE)
+
+        self.stack = []                   
+        self.command = []  
+
 
     # locate the path of Agda excutable
     def locate(self):
 
-        settings = sublime.load_settings("Agda.sublime-settings")
-        agda_path = settings.get('agda_path')
-
-        if not agda_path or not os.path.isfile(agda_path): # empty or not found
-            sublime.status_message('Agda executable not found : ' + agda_path)
-
-            # query the user
-            def on_done(new_path):
-                settings.set('agda_path', new_path)
-                sublime.status_message('path set as: ' + new_path)
-                self.locate_agda()
-
-            self.window = sublime.active_window()
-            self.window.show_input_panel('path of Agda executable', '', on_done, None, None)
-
+        if self.agda_path:
+            return self.agda_path
         else:
-            sublime.save_settings("Agda.sublime-settings")
-            self.__agda_path = agda_path
+            settings = sublime.load_settings("Agda.sublime-settings")
+            agda_path = settings.get('agda_path')
+
+            if not agda_path or not os.path.isfile(agda_path): # empty or not found
+                sublime.status_message('Agda executable not found : ' + agda_path)
+
+                # query the user
+                def on_done(new_path):
+                    settings.set('agda_path', new_path)
+                    sublime.status_message('path set as: ' + new_path)
+                    self.locate_agda()
+
+                self.window = sublime.active_window()
+                self.window.show_input_panel('path of Agda executable', '', on_done, None, None)
+
+            else:
+                sublime.save_settings("Agda.sublime-settings")
+                self.agda_path = agda_path
 
     def write(self, string):
-        self.__agda.stdin.write(bytearray(string + '\n', 'utf-8'))
+        self.agda.stdin.write(bytearray(string + '\n', 'utf-8'))
 
     def read(self):
-        return self.__agda.stdout.readline().decode('utf-8')
+        data = self.agda.stdout.readline().decode('utf-8')
+        self.stack.append(data)
+        self.parse()
+        return data
 
     def load(self):
-        s = 'IOTCM "' + self.__filename + '" None Direct (Cmd_load "' + self.__filename + '" [])'
+        s = 'IOTCM "' + self.filename + '" None Direct (Cmd_load "' + self.filename + '" [])'
+        self.command.append('load')
         self.write(s)
+
+    def parse(self):
+
+        # load
+        if self.command and self.command[0] is 'load' and len(self.stack) >= 8:
+            # remove comand 'load' & stacked data from Agda
+            self.command.pop()
+            self.stack, data = self.stack[8:], self.stack[0:8]
+
 
     # properly terminate the child process (Agda)
     def terminate(self):
-        self.__agda.terminate()
+        self.agda.terminate()

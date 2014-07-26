@@ -56,7 +56,7 @@ class Maneger(object):
             print('load agda', id)
 
             # initializing this newly loaded view
-            agda = Agda(filename)
+            agda = Agda(id, filename)
             panel = Panel(id, agda)
             activate_syntax(view)
             self.loaded_views[id] = {
