@@ -1,30 +1,29 @@
 import sublime, sublime_plugin
 import os
-from pprint import pprint
-
 from Agda.agda.interactive import Agda
 from Agda.agda.panel import Panel
+from Agda.log import logger
 
-class Maneger(object):
-    """docstring for Maneger"""
+class Manager(object):
+    """docstring for Manager"""
     def __init__(self):
-        super(Maneger, self).__init__()
+        super(Manager, self).__init__()
     
     previously_shown_panel = None
     loaded_views = {}
 
     def new_view(self, view):
-        print('new', view.id())
+        logger.debug('[View] %d new' % view.id())
 
     def load_view(self, view):
-        print('load', view.id())
+        logger.debug('[View] %d load' % view.id())
 
     def close_view(self, view):
-        print('close', view.id())
+        logger.debug('[View] %d close' % view.id())
 
     def activate_view(self, view):
         id = view.id()
-        print('activate', id)
+        logger.debug('[View] %d activate' % id)
         filename = view.file_name()
         if filename and filename.endswith('.agda'): # agda
             show_menu()
@@ -50,10 +49,10 @@ class Maneger(object):
         id = view.id()
         filename = view.file_name()
         if id in self.loaded_views:
-            print('agda already loaded', id)
+            logger.debug('[View] %d agda already loaded' % id)
             return
         else:
-            print('load agda', id)
+            logger.debug('[View] %d load agda' % id)
 
             # initializing this newly loaded view
             agda = Agda(id, filename)
@@ -73,10 +72,12 @@ class Maneger(object):
     def quit_agda(self, view):
         id = view.id()
         if id not in self.loaded_views:
-            print('agda never loaded', id)
+            logger.debug('[View] %d agda never loaded' % id)
+
             return
         else:
-            print('quit agda', view.id())
+            logger.debug('[View] %d quit agda' % view.id())
+
             deactivate_syntax(view)
             self.loaded_views[id]['panel'].kill()
             self.loaded_views.pop(id, None)
@@ -84,7 +85,7 @@ class Maneger(object):
 
 
     def restart_agda(self, view):
-        print('restart agda', view.id())
+        logger.debug('[View] %d restart agda' % view.id())
 
 def path(suffix):
     return sublime.packages_path() + '/Agda/' + suffix

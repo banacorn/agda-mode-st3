@@ -1,5 +1,6 @@
 import sublime
 from subprocess import PIPE, Popen, os
+from Agda.log import Log
 
 class Agda(object):
 

@@ -4,6 +4,7 @@
 	"mods_load_order":
 	[
 		"main.py",
+		"log.py",
 		"agda/panel.py",
 		"agda/manager.py",
 		"agda/interactive.py",

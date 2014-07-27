@@ -1,7 +1,9 @@
 import sublime, sublime_plugin
 import os, sys
+from Agda.log import logger
 import Agda.agda.manager as manager
-MANAGER = manager.Maneger()
+
+MANAGER = manager.Manager()
 
 class EventCommand(sublime_plugin.EventListener):
 
