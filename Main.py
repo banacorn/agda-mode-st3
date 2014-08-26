@@ -7,11 +7,23 @@ MANAGER = manager.Manager()
 
 class EventCommand(sublime_plugin.EventListener):
 
+    def on_new(self, view):
+        MANAGER.new_view(view)
+
+    def on_open(self, view):
+        MANAGER.open_view(view)
+
+    def on_close(self, view):
+        MANAGER.close_view(view)
+
     def on_close(self, view):
         MANAGER.close_view(view)
 
     def on_activated_async(self, view):
         MANAGER.activate_view(view)
+
+    def on_deactivated_async(self, view):
+        MANAGER.deactivate_view(view)
 
 class LoadCommand(sublime_plugin.TextCommand):
 

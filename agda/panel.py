@@ -13,11 +13,12 @@ class Panel(object):
 
         self.stream(agda.read)
 
-
+        self.show()
+        
     # write to output panel
     def write(self, string):
         self.panel.run_command('append', {'characters': string})
-        self.show()
+        # self.show()
 
     # streaming data from target function to the panel
     def stream(self, target):

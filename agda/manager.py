@@ -4,13 +4,14 @@ from Agda.agda.interactive import Agda
 from Agda.agda.panel import Panel
 from Agda.log import logger
 
+import inspect
+from pprint import pprint
 class Manager(object):
     """docstring for Manager"""
+    loaded_views = {}
+
     def __init__(self):
         super(Manager, self).__init__()
-    
-    previously_shown_panel = None
-    loaded_views = {}
 
     def new_view(self, view):
         logger.debug('%d new' % view.id())
@@ -21,35 +22,43 @@ class Manager(object):
     def close_view(self, view):
         logger.debug('%d close' % view.id())
 
-    def activate_view(self, view):
+    def deactivate_view(self, view):
         id = view.id()
-        logger.debug('%d activate' % id)
+        logger.debug('%d deactivate' % id)
+        isLoaded = id in self.loaded_views
+
+        # hide agda output panel
+        if isLoaded: 
+            self.loaded_views[id]['panel'].hide()
+
+    def activate_view(self, view):
+
+        id = view.id()
         filename = view.file_name()
-        if filename and filename.endswith('.agda'): # agda
+
+        logger.debug('%d activate' % id)
+
+        isAgda = filename and filename.endswith('.agda')
+        isLoaded = id in self.loaded_views
+
+        if isAgda:
             show_menu()
-            if id in self.loaded_views:             # loaded
-                panel = self.loaded_views[id]['panel']
-                panel.show()
-                self.previously_shown_panel = panel
-
-            else:                                   # unloaded
+            if isLoaded:
+                activate_syntax(view)
+                self.loaded_views[id]['panel'].show()
+            else:
                 deactivate_syntax(view)
-
-                if self.previously_shown_panel:
-                    self.previously_shown_panel.hide()
-                    self.previously_shown_panel = None
-        else:                                       # no agda
+        else:
             hide_menu()
-            # hide panel
-            if self.previously_shown_panel:
-                self.previously_shown_panel.hide()
-                self.previously_shown_panel = None
+
 
     def load_agda(self, view):
         id = view.id()
         filename = view.file_name()
         if id in self.loaded_views:
             logger.debug('%d agda already loaded' % id)
+            panel = self.loaded_views[id]['panel']
+            panel.show()
             return
         else:
             logger.debug('%d load agda' % id)
@@ -61,17 +70,17 @@ class Manager(object):
             self.loaded_views[id] = {
                 'view': view,
                 'agda': agda, 
-                'panel': panel,
+                'panel': panel
             }
-
-            self.previously_shown_panel = panel
 
             # EAT IT, AGDA
             agda.load()
 
     def quit_agda(self, view):
         id = view.id()
-        if id not in self.loaded_views:
+        isLoaded = id in self.loaded_views
+
+        if not isLoaded:
             logger.debug('%d agda never loaded' % id)
 
             return
@@ -81,7 +90,7 @@ class Manager(object):
             deactivate_syntax(view)
             self.loaded_views[id]['panel'].kill()
             self.loaded_views.pop(id, None)
-            self.previously_shown_panel = None
+            # self.previously_shown_panel = None
 
 
     def restart_agda(self, view):
