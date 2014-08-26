@@ -13,16 +13,16 @@ class Manager(object):
     def __init__(self):
         super(Manager, self).__init__()
 
-    def on_new_view(self, view):
+    def new_view(self, view):
         logger.debug('%d new' % view.id())
 
-    def on_load_view(self, view):
+    def load_view(self, view):
         logger.debug('%d load' % view.id())
 
-    def on_close_view(self, view):
+    def close_view(self, view):
         logger.debug('%d close' % view.id())
 
-    def on_deactivate_view(self, view):
+    def deactivate_view(self, view):
         id = view.id()
         logger.debug('%d deactivate' % id)
         isLoaded = id in self.loaded_views
@@ -31,7 +31,7 @@ class Manager(object):
         if isLoaded: 
             self.loaded_views[id]['panel'].hide()
 
-    def on_activate_view(self, view):
+    def activate_view(self, view):
 
         id = view.id()
         filename = view.file_name()
