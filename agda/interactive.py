@@ -65,7 +65,7 @@ class Agda(object):
             # remove comand 'load' & stacked data from Agda
             self.command.pop()
             self.stack, data = self.stack[8:], self.stack[0:8]
-
+            
 
     # properly terminate the child process (Agda)
     def terminate(self):

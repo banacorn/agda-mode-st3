@@ -11,9 +11,9 @@ class Log(object):
             Log.logger = logging.getLogger('whatever logger you piece of Python shit')
 
 
-            # Log.logger.setLevel(logging.DEBUG)
-            Log.logger.setLevel(logging.INFO)
-# 
+            Log.logger.setLevel(logging.DEBUG)
+            # Log.logger.setLevel(logging.INFO)
+ 
             formatter = logging.Formatter(fmt='%(module)s %(message)s')
             handler = logging.StreamHandler()
             handler.setFormatter(formatter)
