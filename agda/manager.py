@@ -56,10 +56,7 @@ class Manager(object):
         id = view.id()
         filename = view.file_name()
         if id in self.loaded_views:
-            logger.debug('%d agda already loaded' % id)
-            panel = self.loaded_views[id]['panel']
-            panel.show()
-            return
+            self.restart_agda(view)
         else:
             logger.debug('%d load agda' % id)
 
@@ -95,6 +92,9 @@ class Manager(object):
 
     def restart_agda(self, view):
         logger.debug('%d restart agda' % view.id())
+
+        self.quit_agda(view)
+        self.load_agda(view)
 
 def path(suffix):
     return sublime.packages_path() + '/Agda/' + suffix
