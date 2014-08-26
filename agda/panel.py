@@ -30,13 +30,13 @@ class Panel(object):
 
     # shows output panel
     def show(self):
-        logger.debug('[Panel] %d show' % self.id)
+        logger.debug('%d show' % self.id)
         self.hidden = False
         self.window.run_command('show_panel', {'panel': 'output.panel-' + str(self.id)})
 
     # hides output panel
     def hide(self):
-        logger.debug('[Panel] %d hide' % self.id)
+        logger.debug('%d hide' % self.id)
         self.hidden = True
         self.window.run_command('hide_panel', {'panel': 'output.panel-' + str(self.id)})
 
@@ -45,5 +45,5 @@ class Panel(object):
         self.hide()
         self.streaming = False
 
-        logger.debug('[Panel] %d killing the stream (if any)' % self.id)
+        logger.debug('%d killing the stream (if any)' % self.id)
 

@@ -13,17 +13,17 @@ class Manager(object):
     loaded_views = {}
 
     def new_view(self, view):
-        logger.debug('[View] %d new' % view.id())
+        logger.debug('%d new' % view.id())
 
     def load_view(self, view):
-        logger.debug('[View] %d load' % view.id())
+        logger.debug('%d load' % view.id())
 
     def close_view(self, view):
-        logger.debug('[View] %d close' % view.id())
+        logger.debug('%d close' % view.id())
 
     def activate_view(self, view):
         id = view.id()
-        logger.debug('[View] %d activate' % id)
+        logger.debug('%d activate' % id)
         filename = view.file_name()
         if filename and filename.endswith('.agda'): # agda
             show_menu()
@@ -49,10 +49,10 @@ class Manager(object):
         id = view.id()
         filename = view.file_name()
         if id in self.loaded_views:
-            logger.debug('[View] %d agda already loaded' % id)
+            logger.debug('%d agda already loaded' % id)
             return
         else:
-            logger.debug('[View] %d load agda' % id)
+            logger.debug('%d load agda' % id)
 
             # initializing this newly loaded view
             agda = Agda(id, filename)
@@ -72,11 +72,11 @@ class Manager(object):
     def quit_agda(self, view):
         id = view.id()
         if id not in self.loaded_views:
-            logger.debug('[View] %d agda never loaded' % id)
+            logger.debug('%d agda never loaded' % id)
 
             return
         else:
-            logger.debug('[View] %d quit agda' % view.id())
+            logger.debug('%d quit agda' % view.id())
 
             deactivate_syntax(view)
             self.loaded_views[id]['panel'].kill()
@@ -85,7 +85,7 @@ class Manager(object):
 
 
     def restart_agda(self, view):
-        logger.debug('[View] %d restart agda' % view.id())
+        logger.debug('%d restart agda' % view.id())
 
 def path(suffix):
     return sublime.packages_path() + '/Agda/' + suffix

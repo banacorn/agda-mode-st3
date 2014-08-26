@@ -14,7 +14,7 @@ class Log(object):
             Log.logger.setLevel(logging.DEBUG)
             # Log.logger.setLevel(logging.INFO)
  
-            formatter = logging.Formatter(fmt='%(module)s %(message)s')
+            formatter = logging.Formatter(fmt='[%(module)s] %(message)s')
             handler = logging.StreamHandler()
             handler.setFormatter(formatter)
             Log.logger.handlers = []
