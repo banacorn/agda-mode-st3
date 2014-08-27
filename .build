@@ -3,8 +3,8 @@
 	"iterations": 1,
 	"mods_load_order":
 	[
-		"main.py",
 		"log.py",
+		"command.py",
 		"agda/panel.py",
 		"agda/manager.py",
 		"agda/interactive.py",

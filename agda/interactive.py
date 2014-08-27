@@ -20,8 +20,8 @@ class Agda(object):
         self.output = Queue()
         self.input = Queue()           
 
-        self.startPiping()
-        self.startParser()
+        self.start_piping()
+        self.start_parser()
 
     # locate the path of Agda excutable
     def locate(self):
@@ -51,7 +51,7 @@ class Agda(object):
     def write(self, string):
         self.agda.stdin.write(bytearray(string + '\n', 'utf-8'))
 
-    def startPiping(self):
+    def start_piping(self):
         def worker():
             logger.debug('%d start piping: Agda ~~~> Interactive' % self.id)
             while True:
@@ -65,7 +65,7 @@ class Agda(object):
         s = 'IOTCM "' + self.filename + '" None Direct (Cmd_load "' + self.filename + '" [])'
         self.write(s)
 
-    def startParser(self):
+    def start_parser(self):
         def worker():
             logger.debug('%d start parsing' % self.id)
             while True:
