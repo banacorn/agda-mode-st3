@@ -30,18 +30,18 @@ class LoadCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         filename = self.view.file_name()
         if filename and filename.endswith('.agda'):
-            MANAGER.load_agda(self.view)
+            MANAGER.load_agda(self.view, edit)
 
 class QuitCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
         filename = self.view.file_name()
         if filename and filename.endswith('.agda'):
-            MANAGER.quit_agda(self.view)
+            MANAGER.quit_agda(self.view, edit)
 
 class KillAndRestartCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
         filename = self.view.file_name()
         if filename and filename.endswith('.agda'):
-            MANAGER.restart_agda(self.view)
+            MANAGER.restart_agda(self.view, edit)

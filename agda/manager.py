@@ -52,7 +52,9 @@ class Manager(object):
             hide_menu()
 
 
-    def load_agda(self, view):
+    def load_agda(self, view, edit):
+
+
         id = view.id()
         filename = view.file_name()
         if id in self.loaded_views:
@@ -62,7 +64,7 @@ class Manager(object):
 
             # initializing this newly loaded view
             agda = Agda(id, filename)
-            panel = Panel(id, agda)
+            panel = Panel(id, edit, agda)
             activate_syntax(view)
             self.loaded_views[id] = {
                 'view': view,
@@ -73,7 +75,7 @@ class Manager(object):
             # EAT IT, AGDA
             agda.load()
 
-    def quit_agda(self, view):
+    def quit_agda(self, view, edit):
         id = view.id()
         isLoaded = id in self.loaded_views
 
@@ -90,11 +92,11 @@ class Manager(object):
             # self.previously_shown_panel = None
 
 
-    def restart_agda(self, view):
+    def restart_agda(self, view, edit):
         logger.debug('%d restart agda' % view.id())
 
         self.quit_agda(view)
-        self.load_agda(view)
+        self.load_agda(view, edit)
 
 def path(suffix):
     return sublime.packages_path() + '/Agda/' + suffix

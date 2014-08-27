@@ -4,28 +4,40 @@ from Agda.log import logger
 
 class Panel(object):    
     """Outputs strings to the panel"""
-    def __init__(self, id, agda):
+    def __init__(self, id, edit, agda):
         self.id = id
         self.window = sublime.active_window()
-        self.panel = self.window.create_output_panel('panel-' + str(id))
+        self.view = self.window.create_output_panel('panel-' + str(id))
+        self.edit = edit
         self.hidden = True 
         self.streaming = False
 
         self.stream(agda.read)
 
         self.show()
-        
-    # write to output panel
-    def write(self, string):
-        self.panel.run_command('append', {'characters': string})
-        # self.show()
+
+
+
+      
+    def appendLine(self, string):
+        last = self.view.size()
+        self.view.insert(self.edit, last, string + '\n')
+
+    def clear(self):
+        region = self.view.visible_region()
+        self.view.erase(self.edit, region)
+
+
+
+
+
 
     # streaming data from target function to the panel
     def stream(self, target):
         def worker():
             while self.streaming:
                 output = target()
-                self.write(output)
+                # self.write(output)
         self.streaming = True
         threading.Thread(target=worker).start()
 
