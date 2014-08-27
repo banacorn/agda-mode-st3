@@ -1,7 +1,8 @@
 import sublime
 from subprocess import PIPE, Popen, os
-import queue
-from Agda.log import Log
+from threading import Thread
+from queue import Queue
+from Agda.log import logger
 
 class Agda(object):
 
@@ -16,9 +17,11 @@ class Agda(object):
         self.locate()
         self.agda = Popen([self.agda_path, '--interaction'], stdin=PIPE, stdout=PIPE)
 
-        self.output = queue.Queue()
-        self.stack = []                   
+        self.output = Queue()
+        self.input = []                 
         self.command = []  
+
+        self.startPiping()
 
 
     # locate the path of Agda excutable
@@ -49,11 +52,15 @@ class Agda(object):
     def write(self, string):
         self.agda.stdin.write(bytearray(string + '\n', 'utf-8'))
 
-    def read(self):
-        data = self.agda.stdout.readline().decode('utf-8')
-        self.stack.append(data)
-        self.parse()
-        return data
+    def startPiping(self):
+        def worker():
+            logger.debug('%d start piping: Agda ~~~> Interactive' % self.id)
+            while True:
+                data = self.agda.stdout.readline().decode('utf-8')
+                self.input.append(data)
+            # logger.debug('%d stopped piping: Agda ~\~> Interactive' % self.id)
+        t = Thread(target=worker)
+        t.start()
 
     def load(self):
         s = 'IOTCM "' + self.filename + '" None Direct (Cmd_load "' + self.filename + '" [])'

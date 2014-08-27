@@ -30,12 +30,12 @@ class Panel(object):
         self.piping = True
         self.queue = queue
         def worker():
-            logger.debug('%d start piping: Agda ~~~> Panel' % self.id)
+            logger.debug('%d start piping: Interactive ~~~> Panel' % self.id)
             while self.piping:
                 data = queue.get()
                 self.clear()
                 self.append(data)
-            logger.debug('%d stopped piping: Agda ~\~> Panel' % self.id)
+            logger.debug('%d stopped piping: Interactive ~\~> Panel' % self.id)
         t = Thread(target=worker)
         t.start()
 
