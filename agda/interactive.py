@@ -18,11 +18,10 @@ class Agda(object):
         self.agda = Popen([self.agda_path, '--interaction'], stdin=PIPE, stdout=PIPE)
 
         self.output = Queue()
-        self.input = []                 
-        self.command = []  
+        self.input = Queue()           
 
         self.startPiping()
-
+        self.startParser()
 
     # locate the path of Agda excutable
     def locate(self):
@@ -57,24 +56,25 @@ class Agda(object):
             logger.debug('%d start piping: Agda ~~~> Interactive' % self.id)
             while True:
                 data = self.agda.stdout.readline().decode('utf-8')
-                self.input.append(data)
+                self.input.put(data)
             # logger.debug('%d stopped piping: Agda ~\~> Interactive' % self.id)
         t = Thread(target=worker)
         t.start()
 
     def load(self):
         s = 'IOTCM "' + self.filename + '" None Direct (Cmd_load "' + self.filename + '" [])'
-        self.command.append('load')
         self.write(s)
 
-    def parse(self):
-
-        # load
-        if self.command and self.command[0] is 'load' and len(self.stack) >= 8:
-            # remove comand 'load' & stacked data from Agda
-            self.command.pop()
-            self.stack, data = self.stack[8:], self.stack[0:8]
-            
+    def startParser(self):
+        def worker():
+            logger.debug('%d start parsing' % self.id)
+            while True:
+                data = self.input.get()
+                print(data)
+                self.output.put(data)
+        t = Thread(target=worker)
+        t.start()
+                    
 
     # properly terminate the child process (Agda)
     def terminate(self):
