@@ -45,3 +45,17 @@ class KillAndRestartCommand(sublime_plugin.TextCommand):
         filename = self.view.file_name()
         if filename and filename.endswith('.agda'):
             MANAGER.restart_agda(self.view, edit)
+
+
+### commands for output panel
+class AppendPanelCommand(sublime_plugin.TextCommand):
+
+    def run(self, edit, **kargs):
+        last = self.view.size()
+        self.view.insert(edit, last, kargs['string'])
+
+class ClearPanelCommand(sublime_plugin.TextCommand):
+
+    def run(self, edit):
+        region = self.view.visible_region()
+        self.view.erase(edit, region)

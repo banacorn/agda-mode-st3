@@ -1,5 +1,6 @@
 import sublime
 from subprocess import PIPE, Popen, os
+import queue
 from Agda.log import Log
 
 class Agda(object):
@@ -15,6 +16,7 @@ class Agda(object):
         self.locate()
         self.agda = Popen([self.agda_path, '--interaction'], stdin=PIPE, stdout=PIPE)
 
+        self.output = queue.Queue()
         self.stack = []                   
         self.command = []  
 

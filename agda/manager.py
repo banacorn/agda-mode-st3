@@ -58,13 +58,15 @@ class Manager(object):
         id = view.id()
         filename = view.file_name()
         if id in self.loaded_views:
-            self.restart_agda(view)
+            self.restart_agda(view, edit)
         else:
             logger.debug('%d load agda' % id)
 
             # initializing this newly loaded view
             agda = Agda(id, filename)
-            panel = Panel(id, edit, agda)
+            panel = Panel(id, edit)
+            panel.pipe(agda.output)
+
             activate_syntax(view)
             self.loaded_views[id] = {
                 'view': view,
@@ -89,13 +91,12 @@ class Manager(object):
             deactivate_syntax(view)
             self.loaded_views[id]['panel'].kill()
             self.loaded_views.pop(id, None)
-            # self.previously_shown_panel = None
 
 
     def restart_agda(self, view, edit):
         logger.debug('%d restart agda' % view.id())
 
-        self.quit_agda(view)
+        self.quit_agda(view, edit)
         self.load_agda(view, edit)
 
 def path(suffix):

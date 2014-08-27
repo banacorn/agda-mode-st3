@@ -1,45 +1,43 @@
 import sublime
-import threading
+from threading import Thread
 from Agda.log import logger
 
 class Panel(object):    
     """Outputs strings to the panel"""
-    def __init__(self, id, edit, agda):
+    def __init__(self, id, edit):
         self.id = id
         self.window = sublime.active_window()
         self.view = self.window.create_output_panel('panel-' + str(id))
         self.edit = edit
         self.hidden = True 
-        self.streaming = False
-
-        self.stream(agda.read)
-
         self.show()
 
+        #
+        self.piping = False
 
 
-      
-    def appendLine(self, string):
-        last = self.view.size()
-        self.view.insert(self.edit, last, string + '\n')
+    def append(self, string):
+        if string is not None:
+            last = self.view.size()
+            self.view.run_command('append_panel', {'string': string})
 
     def clear(self):
         region = self.view.visible_region()
-        self.view.erase(self.edit, region)
+        self.view.run_command('clear_panel')
 
-
-
-
-
-
-    # streaming data from target function to the panel
-    def stream(self, target):
+    # piping data from queue to output panel
+    def pipe(self, queue):
+        self.piping = True
+        self.queue = queue
         def worker():
-            while self.streaming:
-                output = target()
-                # self.write(output)
-        self.streaming = True
-        threading.Thread(target=worker).start()
+            logger.debug('%d start piping: Agda ~~~> Panel' % self.id)
+            while self.piping:
+                data = queue.get()
+                self.clear()
+                self.append(data)
+            logger.debug('%d stopped piping: Agda ~\~> Panel' % self.id)
+        t = Thread(target=worker)
+        t.start()
 
     # shows output panel
     def show(self):
@@ -53,10 +51,9 @@ class Panel(object):
         self.hidden = True
         self.window.run_command('hide_panel', {'panel': 'output.panel-' + str(self.id)})
 
-    # hides output panel & kills the stream (if any)
     def kill(self):
-        self.hide()
-        self.streaming = False
-
-        logger.debug('%d killing the stream (if any)' % self.id)
-
+        if self.piping and self.queue:
+            self.piping = False
+            self.queue.put(None)
+            self.hide()
+            
